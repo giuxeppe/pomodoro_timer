@@ -31,7 +31,7 @@ const closeModalBtn = document.querySelector('.close-btn');
 const backgroundColorSelect = document.getElementById('background-color');
 const fontColorSelect = document.getElementById('font-color');
 const saveBtn = document.getElementById('save-btn');
-const pomodoroLogo = document.getElementById('pomodoro-logo'); // Selettore Logo
+const pomodoroLogo = document.getElementById('pomodoro-logo');
 
 // Helper: switch interval
 function switchInterval(name, seconds) {
@@ -96,6 +96,10 @@ customSecondsInput.addEventListener('blur', () => {
 // Start/Stop
 startStopBtn.addEventListener('click', () => {
   if (startStopBtn.textContent === 'Start') {
+    // Chiede il permesso per le notifiche desktop alla prima interazione dell'utente
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
     startTimer();
     startStopBtn.textContent = 'Stop';
   } else {
@@ -135,6 +139,28 @@ saveBtn.addEventListener('click', () => {
   settingsModal.style.display = 'none';
 });
 
+// Funzione di gestione per inviare notifiche reali o alert di riserva
+function inviaNotifica(messaggio) {
+  if (!("Notification" in window)) {
+    // Se il browser non supporta le notifiche di sistema, usa l'alert classico
+    alert(messaggio);
+  } else if (Notification.permission === "granted") {
+    // Se i permessi sono già attivi, invia la notifica desktop
+    new Notification("Pomodoro Timer by Giux", { body: messaggio });
+  } else if (Notification.permission !== "denied") {
+    // Altrimenti richiede il permesso al volo e la invia
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        new Notification("Pomodoro Timer by Giux", { body: messaggio });
+      } else {
+        alert(messaggio);
+      }
+    });
+  } else {
+    alert(messaggio);
+  }
+}
+
 // Timer logic
 function startTimer() {
   timerInterval = setInterval(() => {
@@ -143,8 +169,8 @@ function startTimer() {
     if (timeLeft === 0) {
       clearInterval(timerInterval);
       
-      // Popup avviso fine timer
-      alert("Il timer è terminato! È ora di continuare lo studio. Non mollare!");
+      // Invia la notifica di sistema senza bloccare l'esecuzione del codice
+      inviaNotifica("Il timer è terminato! È ora di continuare lo studio. Non mollare!");
 
       // Auto-advance only for standard intervals
       if (currentInterval === 'pomodoro') {
@@ -195,7 +221,7 @@ function applyUserPreferences() {
   document.body.style.backgroundColor = backgroundColor;
   document.body.style.color = fontColor;
   timeLeftEl.style.color = fontColor;
-  if (pomodoroLogo) pomodoroLogo.style.color = fontColor; // Applica colore al logo
+  if (pomodoroLogo) pomodoroLogo.style.color = fontColor;
 
   const buttons = document.querySelectorAll('.interval-btn, #start-stop-btn, #reset-btn, #settings-btn');
   buttons.forEach((button) => {
