@@ -33,6 +33,10 @@ const fontColorSelect = document.getElementById('font-color');
 const saveBtn = document.getElementById('save-btn');
 const pomodoroLogo = document.getElementById('pomodoro-logo');
 
+// Nuovi elementi DOM per l'avviso a schermo
+const alertModal = document.getElementById('alert-modal');
+const alertCloseBtn = document.getElementById('alert-close-btn');
+
 // Helper: switch interval
 function switchInterval(name, seconds) {
   stopTimer();
@@ -96,10 +100,6 @@ customSecondsInput.addEventListener('blur', () => {
 // Start/Stop
 startStopBtn.addEventListener('click', () => {
   if (startStopBtn.textContent === 'Start') {
-    // Chiede il permesso per le notifiche desktop alla prima interazione dell'utente
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission();
-    }
     startTimer();
     startStopBtn.textContent = 'Stop';
   } else {
@@ -139,27 +139,10 @@ saveBtn.addEventListener('click', () => {
   settingsModal.style.display = 'none';
 });
 
-// Funzione di gestione per inviare notifiche reali o alert di riserva
-function inviaNotifica(messaggio) {
-  if (!("Notification" in window)) {
-    // Se il browser non supporta le notifiche di sistema, usa l'alert classico
-    alert(messaggio);
-  } else if (Notification.permission === "granted") {
-    // Se i permessi sono già attivi, invia la notifica desktop
-    new Notification("Pomodoro Timer by Giux", { body: messaggio });
-  } else if (Notification.permission !== "denied") {
-    // Altrimenti richiede il permesso al volo e la invia
-    Notification.requestPermission().then(permission => {
-      if (permission === "granted") {
-        new Notification("Pomodoro Timer by Giux", { body: messaggio });
-      } else {
-        alert(messaggio);
-      }
-    });
-  } else {
-    alert(messaggio);
-  }
-}
+// Chiudi il popup di avviso a schermo
+alertCloseBtn.addEventListener('click', () => {
+  alertModal.style.display = 'none';
+});
 
 // Timer logic
 function startTimer() {
@@ -169,8 +152,8 @@ function startTimer() {
     if (timeLeft === 0) {
       clearInterval(timerInterval);
       
-      // Invia la notifica di sistema senza bloccare l'esecuzione del codice
-      inviaNotifica("Il timer è terminato! È ora di continuare lo studio. Non mollare!");
+      // Mostra l'avviso direttamente nello schermo dell'embed
+      alertModal.style.display = 'flex';
 
       // Auto-advance only for standard intervals
       if (currentInterval === 'pomodoro') {
@@ -241,6 +224,12 @@ function applyUserPreferences() {
     setBtn.style.color = backgroundColor;
     setBtn.style.backgroundColor = fontColor;
     setBtn.style.borderColor = fontColor;
+  }
+
+  // Applica lo stile dinamico anche al pulsante del nuovo avviso popup
+  if (alertCloseBtn) {
+    alertCloseBtn.style.color = backgroundColor;
+    alertCloseBtn.style.backgroundColor = fontColor;
   }
 }
 

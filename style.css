@@ -18,7 +18,6 @@ body {
   box-sizing: border-box;
 }
 
-/* --- Stile Logo aggiunto --- */
 #pomodoro-logo {
   font-family: "Rubik", sans-serif;
   font-size: 1.6rem;
@@ -165,13 +164,13 @@ body {
 }
 
 /* --- Settings Modal --- */
-#settings-modal {
+#settings-modal, #alert-modal {
   font-family: Rubik;
   display: none;
   align-items: center;
   justify-content: center;
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;
@@ -218,7 +217,7 @@ body {
   margin-right: 10px;
 }
 
-#save-btn {
+#save-btn, #alert-close-btn {
   margin-top: 10px;
   width: 60%;
   font-family: Rubik;
@@ -231,7 +230,7 @@ body {
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-#save-btn:hover {
+#save-btn:hover, #alert-close-btn:hover {
   background-color: grey;
   color: white;
 }
