@@ -18,6 +18,16 @@ body {
   box-sizing: border-box;
 }
 
+/* --- Stile Logo aggiunto --- */
+#pomodoro-logo {
+  font-family: "Rubik", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
 #interval-container {
   display: flex;
   justify-content: center;

@@ -31,6 +31,7 @@ const closeModalBtn = document.querySelector('.close-btn');
 const backgroundColorSelect = document.getElementById('background-color');
 const fontColorSelect = document.getElementById('font-color');
 const saveBtn = document.getElementById('save-btn');
+const pomodoroLogo = document.getElementById('pomodoro-logo'); // Selettore Logo
 
 // Helper: switch interval
 function switchInterval(name, seconds) {
@@ -141,6 +142,10 @@ function startTimer() {
     updateTimeLeftTextContent();
     if (timeLeft === 0) {
       clearInterval(timerInterval);
+      
+      // Popup avviso fine timer
+      alert("Il timer è terminato! È ora di continuare lo studio. Non mollare!");
+
       // Auto-advance only for standard intervals
       if (currentInterval === 'pomodoro') {
         timeLeft = INTERVAL_DEFAULTS['short-break'];
@@ -190,6 +195,7 @@ function applyUserPreferences() {
   document.body.style.backgroundColor = backgroundColor;
   document.body.style.color = fontColor;
   timeLeftEl.style.color = fontColor;
+  if (pomodoroLogo) pomodoroLogo.style.color = fontColor; // Applica colore al logo
 
   const buttons = document.querySelectorAll('.interval-btn, #start-stop-btn, #reset-btn, #settings-btn');
   buttons.forEach((button) => {
