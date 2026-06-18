@@ -2,8 +2,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
 
 body {
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
-  overflow-y: hidden;
+  /* Rimosso overflow-y: hidden per evitare tagli netti se l'embed di Notion è troppo basso */
 }
 
 #pomodoro-container {
@@ -11,16 +13,17 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh; /* Cambiato da height a min-height per adattarsi ai display bassi */
   max-width: 560px;
   margin: 0 auto;
-  padding: 1.1rem;
+  padding: 1rem;
   box-sizing: border-box;
 }
 
+/* --- Stile Logo Fluid --- */
 #pomodoro-logo {
   font-family: "Rubik", sans-serif;
-  font-size: 1.6rem;
+  font-size: clamp(1.2rem, 5vw, 1.6rem); /* Si ridimensiona fluidamente su mobile */
   font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -31,27 +34,30 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.1rem;
+  gap: 0.2rem;
 }
 
 #timer-container {
-  margin-top: 0.125rem;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 #start-stop-reset-container {
-  margin-top: 0.125rem;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
+/* --- Il Timer ora scala perfettamente ovunque --- */
 #time-left {
   font-family: "Karla", sans-serif;
-  font-size: 10.375rem;
+  font-size: clamp(4.5rem, 24vw, 10.375rem); /* Minimo 4.5rem su mobile, massimo 10.375rem su desktop */
   font-weight: 800;
   text-align: center;
-  margin-bottom: 1rem;
-  letter-spacing: -5px;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+  line-height: 1; /* Impedisce che lo spazio verticale collassi o raddoppi */
 }
 
 /* --- Buttons --- */
@@ -63,9 +69,9 @@ body {
   border: 1px solid black;
   color: black;
   font-family: "Rubik", sans-serif;
-  font-size: 1rem;
-  margin: 0.313rem;
-  padding: 0.313rem 0.5rem;
+  font-size: clamp(0.85rem, 3vw, 1rem); /* Pulsanti leggermente più piccoli su schermi mini */
+  margin: 0.2rem;
+  padding: 0.4rem 0.7rem;
   text-align: center;
   background-color: transparent;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
@@ -93,7 +99,7 @@ body {
   align-items: flex-end;
   justify-content: center;
   gap: 0.5rem;
-  margin: 0.5rem 0 0.25rem;
+  margin: 0.8rem 0 0.4rem;
   flex-wrap: wrap;
 }
 
@@ -115,9 +121,9 @@ body {
 #custom-minutes,
 #custom-seconds {
   font-family: "Karla", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  width: 3.5rem;
+  width: 3.2rem;
   text-align: center;
   border: 1px solid black;
   border-radius: 8px;
@@ -137,7 +143,7 @@ body {
 
 .custom-separator {
   font-family: "Karla", sans-serif;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 800;
   padding-bottom: 0.1rem;
   line-height: 1;
@@ -147,8 +153,8 @@ body {
 
 #set-custom-btn {
   font-family: "Rubik", sans-serif;
-  font-size: 0.9rem;
-  padding: 0.3rem 1rem;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.9rem;
   border-radius: 50px;
   border: 1px solid black;
   background-color: black;
@@ -156,14 +162,14 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
   align-self: flex-end;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
 }
 
 #set-custom-btn:hover {
   background-color: #444;
 }
 
-/* --- Settings Modal --- */
+/* --- Settings & Alert Modals --- */
 #settings-modal, #alert-modal {
   font-family: Rubik;
   display: none;
@@ -176,32 +182,38 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .modal-content {
-  width: 300px;
+  width: 100%;
+  max-width: 300px; /* Adattabile se lo schermo è più stretto di 300px */
   font-family: Rubik;
   color: black;
-  align-items: center;
-  justify-content: center;
   background-color: #f7f6f3;
-  padding: 30px;
+  padding: 25px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .close-btn {
   color: #000;
   float: right;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: bold;
   cursor: pointer;
+  line-height: 1;
 }
 
 .setting-option {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   font-family: Rubik;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 .setting-wrapper {
@@ -209,17 +221,18 @@ body {
   flex-direction: column;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .setting-option label {
-  text-align: center;
   font-family: Rubik;
-  margin-right: 10px;
+  text-align: left;
+  font-size: 0.9rem;
 }
 
 #save-btn, #alert-close-btn {
   margin-top: 10px;
-  width: 60%;
+  width: 80%;
   font-family: Rubik;
   background-color: black;
   color: #fff;
@@ -227,6 +240,7 @@ body {
   border-radius: 100px;
   padding: 10px 20px;
   cursor: pointer;
+  font-size: 0.95rem;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
@@ -238,12 +252,11 @@ body {
 select {
   appearance: none;
   background-color: transparent;
-  border: none;
-  padding: 0 1em 0 0;
-  margin: 10px;
-  width: 60%;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 50%;
   font-family: inherit;
-  font-size: inherit;
-  cursor: inherit;
-  line-height: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
